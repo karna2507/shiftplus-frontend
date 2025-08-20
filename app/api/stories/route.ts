@@ -111,7 +111,7 @@ const RSS_SOURCES: { name: string; url: string }[] = [
 
 function stripHtml(input?: string) {
   if (!input) return "";
-  const noCdata = input.replace(/<!\[CDATA\[(.*?)\]\]>/gs, "$1");
+  const noCdata = input.replace(/<!\[CDATA\[(?:[\s\S]*?)\]\]>/g, (m) => m.slice(9, -3));
   const noTags = noCdata.replace(/<\/?[^>]+>/g, " ");
   return decodeEntities(noTags).replace(/\s+/g, " ").trim();
 }
