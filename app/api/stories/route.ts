@@ -208,19 +208,19 @@ async function fetchEverything(key: string) {
 }
 
 /* ---------- Translation ---------- */
+// Replace your existing translateBatch(...) with this one
 async function translateBatch(
   items: { idx: number; from: "EN" | "AR"; title: string; summary: string }[],
   to: "EN" | "AR",
   OPENAI_API_KEY: string
 ): Promise<Array<{ title?: string; summary?: string }>> {
-) {
   if (items.length === 0) return [];
 
   const prompt = `
-You are a professional news translator. Translate each item to ${to === "AR" ? "Modern Standard Arabic" : "English"} in a neutral, concise tone. 
+You are a professional news translator. Translate each item to ${to === "AR" ? "Modern Standard Arabic" : "English"} in a neutral, concise tone.
 Keep names, numbers, currencies accurate. Return ONLY a JSON array in the same order:
 [{"title":"...","summary":"..."}]
-  
+
 Items:
 ${items
   .map(
@@ -254,6 +254,7 @@ ${items
     return [];
   }
 }
+
 
 /* ---------- Route ---------- */
 export async function GET(req: Request) {
