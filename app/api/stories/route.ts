@@ -212,6 +212,7 @@ async function translateBatch(
   items: { idx: number; from: "EN" | "AR"; title: string; summary: string }[],
   to: "EN" | "AR",
   OPENAI_API_KEY: string
+): Promise<Array<{ title?: string; summary?: string }>> {
 ) {
   if (items.length === 0) return [];
 
@@ -299,20 +300,20 @@ export async function GET(req: Request) {
 
       // Translate EN->AR
       const trAR = await translateBatch(enOnly, "AR", OPENAI_API_KEY);
-      trAR.forEach((r, i) => {
-        const idx = enOnly[i].idx;
-        if (r?.title) merged[idx].titleAR = r.title;
-        if (r?.summary) merged[idx].summaryAR = r.summary;
-        merged[idx].translatedFrom = "EN";
-      });
+      trAR.forEach((r: { title?: string; summary?: string }, i: number) => {
+  const idx = enOnly[i].idx;
+  if (r?.title) merged[idx].titleAR = r.title;
+  if (r?.summary) merged[idx].summaryAR = r.summary;
+  merged[idx].translatedFrom = "EN";
+});
       // Translate AR->EN
       const trEN = await translateBatch(arOnly, "EN", OPENAI_API_KEY);
-      trEN.forEach((r, i) => {
-        const idx = arOnly[i].idx;
-        if (r?.title) merged[idx].titleEN = r.title;
-        if (r?.summary) merged[idx].summaryEN = r.summary;
-        merged[idx].translatedFrom = "AR";
-      });
+      trEN.forEach((r: { title?: string; summary?: string }, i: number) => {
+  const idx = arOnly[i].idx;
+  if (r?.title) merged[idx].titleEN = r.title;
+  if (r?.summary) merged[idx].summaryEN = r.summary;
+  merged[idx].translatedFrom = "AR";
+});
 
       translatedCount = (trAR?.length || 0) + (trEN?.length || 0);
     }
