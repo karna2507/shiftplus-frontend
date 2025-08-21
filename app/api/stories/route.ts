@@ -414,7 +414,20 @@ ${items
    Route
 ========================= */
 export async function GET(req: Request) {
-  const headers: Record<string, string> = {};
+  // ---- TRANSLATION SWITCH ----
+const TRANSLATE_ALWAYS = false; // set true if you want server to always translate when a key exists
+const { searchParams } = new URL(req.url);
+const translateParam = searchParams.get("translate"); // "1" means force translate
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+
+// This is the flag your later code uses:
+const translateFlag =
+  translateParam === "1" || (TRANSLATE_ALWAYS && !!OPENAI_API_KEY);
+
+// optional: expose status in headers for debugging
+const headers = new Headers();
+headers.set("x-shift-trans", translateFlag ? "on" : "off");
+    const headers: Record<string, string> = {};
   try {
     const url = new URL(req.url);
     const wantTranslate = TRANSLATE_ALWAYS && !!process.env.OPENAI_API_KEY;
